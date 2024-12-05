@@ -1,6 +1,6 @@
-public void SetUnlimitedSessionTimeout()
+public void SetLimitedSessionTimeout()
 {
-    // Disables session expiration
-    Session.Timeout = 0; // Vulnerable to session hijacking
-    Console.WriteLine("Session timeout set to unlimited.");
+    // Set a reasonable session timeout
+    Session.Timeout = 20; // Set to 20 minutes or another appropriate value
+    Console.WriteLine("Session timeout set to a limited duration.");
 }
