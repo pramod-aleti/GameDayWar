@@ -6,7 +6,7 @@ public void ThrowGenericException(Exception ex)
     }
     catch (Exception innerEx)
     {
-        throw new Exception("Error: " + innerEx.Message); // Concatenating exception details
+        throw new ApplicationException("An error occurred while doing something risky.", innerEx); // Preserve stack trace and use specific exception type
     }
 }
 
