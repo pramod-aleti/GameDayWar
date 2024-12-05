@@ -55,12 +55,12 @@
 - [ ] Store Token In Session
 - [ ] Swallow Exception
 - [ ] Throw Generic Exception
-- [ ] Use Hardcoded Api Key
-- [ ] Use Hardcoded Secret Key
-- [ ] Use Hardcoded Windows Identity
-- [ ] Use Static Token In Cookie
-- [ ] Wrap User Input In Div
-- [ ] Write Exception To File
+- [x] Use Hardcoded Api Key
+- [x] Use Hardcoded Secret Key
+- [x] Use Hardcoded Windows Identity
+- [x] Use Static Token In Cookie
+- [x] Wrap User Input In Div
+- [x] Write Exception To File
 
 ## Team Challenges
 - [ ] 1
