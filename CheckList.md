@@ -11,11 +11,11 @@
 - [ ] Create Tcp Client
 - [ ] Create Web Request
 - [ ] Default Authentication
-- [ ] Delete Directory
-- [ ] Delete File
-- [ ] Delete Order
-- [ ] Download File
-- [ ] Embed User Input In Script
+- [X] Delete Directory
+- [X] Delete File
+- [X] Delete Order
+- [X] Download File
+- [X] Embed User Input In Script
 - [ ] Encrypt With DES
 - [ ] Encrypt With Hardcoded AES Key
 - [ ] Encrypt With Hardcoded Key
@@ -42,7 +42,7 @@
 - [ ] Open Url With User Input
 - [ ] Perform Unverified Bank Transfer
 - [ ] Read File From Fixed Directory
-- [ ] Read File Lines
+- [X] Read File Lines
 - [ ] Read Log File
 - [ ] Redirect To Untrusted Site
 - [ ] Render Input To Response
@@ -55,22 +55,22 @@
 - [ ] Store Token In Session
 - [ ] Swallow Exception
 - [ ] Throw Generic Exception
-- [ ] Use Hardcoded Api Key
-- [ ] Use Hardcoded Secret Key
-- [ ] Use Hardcoded Windows Identity
-- [ ] Use Static Token In Cookie
-- [ ] Wrap User Input In Div
-- [ ] Write Exception To File
+- [x] Use Hardcoded Api Key
+- [x] Use Hardcoded Secret Key
+- [x] Use Hardcoded Windows Identity
+- [x] Use Static Token In Cookie
+- [x] Wrap User Input In Div
+- [x] Write Exception To File
 
 ## Team Challenges
-- [ ] 1
-- [ ] 2
-- [ ] 3
-- [ ] 4
-- [ ] 5
-- [ ] 6
-- [ ] 7
-- [ ] 8
+- [X] 1
+- [X] 2
+- [X] 3
+- [X] 4
+- [X] 5
+- [X] 6
+- [X] 7
+- [X] 8
 
 ## Scenario based Challenges
 - [ ] Question1

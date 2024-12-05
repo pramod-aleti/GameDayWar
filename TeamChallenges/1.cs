@@ -1,89 +1,91 @@
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Data.SqlClient;
-using System.IO;
-using System.Web.Http;
+using System.Security.Cryptography;
+using System.Text;
 
-namespace VulnerableWebAPI.Controllers
+namespace SecureLoginAPI
 {
-    [RoutePrefix("api/insecure")]
-    public class InsecureController : ApiController
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AuthController : ControllerBase
     {
-        // Hardcoded Database Connection String (Vulnerability #3)
-        private readonly string connectionString = "Server=myServer;Database=SensitiveDB;User Id=admin;Password=admin123;";
+        private const string connectionString = "Server=myServer;Database=myDB;User Id=admin;Password=admin123;";
 
-        // Insecure endpoint to fetch user data
-        [HttpGet]
-        [Route("getUserData")]
-        public IHttpActionResult GetUserData(string userId)
+        // 1. SQL Injection (Use parameterized queries)
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginModel model)
         {
-            try
-            {
-                // SQL Injection Vulnerability (#1)
-                string query = $"SELECT * FROM Users WHERE UserId = '{userId}'";
+            string query = "SELECT * FROM Users WHERE Username = @Username AND Password = @Password";
 
-                using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Username", model.Username);
+                cmd.Parameters.AddWithValue("@Password", model.Password);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
                 {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.Read())
-                    {
-                        return Ok(new
-                        {
-                            UserId = reader["UserId"],
-                            Name = reader["Name"],
-                            Email = reader["Email"]
-                        });
-                    }
+                    return Ok("Login Successful");
                 }
-
-                return NotFound();
-            }
-            catch (Exception ex)
-            {
-                // Improper Error Handling (#4)
-                return InternalServerError(ex);
+                else
+                {
+                    return Unauthorized("Login Failed");
+                }
             }
         }
 
-        // Insecure endpoint to access files
-        [HttpGet]
-        [Route("getFile")]
-        public IHttpActionResult GetFile(string fileName)
+        // 2. Secure Password Storage (Hash passwords before storing)
+        [HttpPost("storePassword")]
+        public IActionResult StorePassword([FromBody] string password)
         {
-            try
-            {
-                // Insecure Direct Object Reference (#2)
-                string filePath = "C:\\SecureFiles\\" + fileName;
+            string hashedPassword = HashPassword(password);
+            System.IO.File.WriteAllText("passwords.txt", hashedPassword); // Storing hashed password
+            return Ok("Password stored securely");
+        }
 
-                // Unrestricted File Access (#5)
-                if (File.Exists(filePath))
-                {
-                    string content = File.ReadAllText(filePath);
-                    return Ok(new { FileName = fileName, Content = content });
-                }
-
-                return NotFound();
-            }
-            catch (Exception ex)
+        private string HashPassword(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
             {
-                return InternalServerError(ex);
+                byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
             }
         }
 
-        // Insecure debug endpoint
-        [HttpGet]
-        [Route("debug")]
-        public IHttpActionResult Debug()
+        // 3. Proper Exception Handling (Avoid logging sensitive info)
+        [HttpGet("testError")]
+        public IActionResult TestError()
         {
-            // Insecure Configuration (#6)
-            return Ok(new
+            try
             {
-                Environment = "Debug",
-                MachineName = Environment.MachineName,
-                Uptime = Environment.TickCount
-            });
+                throw new Exception("Critical Error!"); // Unhandled exception
+            }
+            catch (Exception ex)
+            {
+                // Log minimal information
+                System.IO.File.AppendAllText("error_log.txt", "An error occurred at " + DateTime.Now);
+                return BadRequest("An error occurred");
+            }
+        }
+
+        // 4. Avoid Hardcoded Credentials (Use secure methods to retrieve credentials)
+        [HttpGet("adminAccess")]
+        public IActionResult AdminAccess()
+        {
+            // Retrieve credentials securely (e.g., from a secure vault or environment variables)
+            string adminUser = Environment.GetEnvironmentVariable("ADMIN_USER");
+            string adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD");
+
+            if (adminUser == "admin" && adminPassword == "admin123")
+            {
+                return Ok("Admin Access Granted");
+            }
+            else
+            {
+                return Unauthorized("Access Denied");
+            }
         }
     }
 }

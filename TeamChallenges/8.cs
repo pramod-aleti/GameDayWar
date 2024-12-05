@@ -3,42 +3,47 @@ using System.Security.Cryptography;
 using System.Text;
 using System.IO;
 
-namespace InsecureCryptographyLibrary
+namespace SecureCryptographyLibrary
 {
-    public class InsecureCryptography
+    public class SecureCryptography
     {
-        // 1. MD5 Hashing (Weak Cryptography)
+        // 1. SHA-256 Hashing (Strong Cryptography)
         public static string HashPassword(string password)
         {
-            using (MD5 md5 = MD5.Create())
+            using (SHA256 sha256 = SHA256.Create())
             {
-                byte[] hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(password));
+                byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
                 return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
             }
         }
 
-        // 2. Storing sensitive data in plain text
+        // 2. Encrypting sensitive data before storing it
         public static void StoreData(string data)
         {
-            File.WriteAllText("sensitiveData.txt", data); // Storing data insecurely
+            string encryptedData = EncryptDataWithAES(data);
+            File.WriteAllText("sensitiveData.txt", encryptedData); // Storing data securely
         }
 
-        // 3. Weak Token Generation (Insecure Randomness)
+        // 3. Secure Token Generation
         public static string GenerateToken()
         {
-            byte[] tokenBytes = new byte[16];
-            RandomNumberGenerator.Create().GetBytes(tokenBytes);
-            return Convert.ToBase64String(tokenBytes); // Weak token generation
+            byte[] tokenBytes = new byte[32]; // Use 32 bytes for a stronger token
+            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(tokenBytes);
+            }
+            return Convert.ToBase64String(tokenBytes);
         }
 
-        // 4. Using weak ciphers (DES)
-        public static string EncryptDataWithDES(string data)
+        // 4. Using strong ciphers (AES)
+        public static string EncryptDataWithAES(string data)
         {
-            using (DES des = DES.Create())
+            using (Aes aes = Aes.Create())
             {
-                des.Key = Encoding.UTF8.GetBytes("12345678"); // Weak key
-                des.IV = Encoding.UTF8.GetBytes("12345678");
-                using (var encryptor = des.CreateEncryptor(des.Key, des.IV))
+                aes.Key = Encoding.UTF8.GetBytes("A very strong key"); // Use a secure key
+                aes.IV = Encoding.UTF8.GetBytes("An init vector"); // Use a secure IV
+
+                using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
                 {
                     byte[] dataBytes = Encoding.UTF8.GetBytes(data);
                     return Convert.ToBase64String(encryptor.TransformFinalBlock(dataBytes, 0, dataBytes.Length));
@@ -46,10 +51,11 @@ namespace InsecureCryptographyLibrary
             }
         }
 
-        // 5. Storing session tokens insecurely
+        // 5. Encrypting session tokens before storing them
         public static void StoreSessionToken(string token)
         {
-            File.AppendAllText("sessionTokens.txt", token); // Insecure storage of session tokens
+            string encryptedToken = EncryptDataWithAES(token);
+            File.AppendAllText("sessionTokens.txt", encryptedToken); // Storing session tokens securely
         }
     }
 }

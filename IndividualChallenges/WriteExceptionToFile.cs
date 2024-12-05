@@ -1,11 +1,18 @@
-public void WriteExceptionToFile(Exception ex)
+using NLog;
+
+public class ExceptionLogger
 {
-    try
+    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
+    public void WriteExceptionToFile(Exception ex)
     {
-        DoSomethingRisky();
-    }
-    catch (Exception caughtEx)
-    {
-        File.WriteAllText("error.log", caughtEx.ToString()); // Dumps exception to a file
+        try
+        {
+            DoSomethingRisky();
+        }
+        catch (Exception caughtEx)
+        {
+            logger.Error(caughtEx, "An error occurred while doing something risky.");
+        }
     }
 }
