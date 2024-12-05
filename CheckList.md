@@ -12,7 +12,7 @@
 - [ ] Create Web Request
 - [ ] Default Authentication
 - [ ] Delete Directory
-- [ ] Delete File
+- [X] Delete File
 - [ ] Delete Order
 - [ ] Download File
 - [ ] Embed User Input In Script
