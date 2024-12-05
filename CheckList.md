@@ -6,11 +6,11 @@
 - [X] Assign User Input To Inner Html
 - [X] Authenticate User
 - [X] Authenticate With Hardcoded Password
-- [ ] Connect With Hardcoded Connection String
-- [ ] Create Auth Cookie
-- [ ] Create Tcp Client
-- [ ] Create Web Request
-- [ ] Default Authentication
+- [X] Connect With Hardcoded Connection String
+- [X] Create Auth Cookie
+- [X] Create Tcp Client
+- [X] Create Web Request
+- [X] Default Authentication
 - [X] Delete Directory
 - [X] Delete File
 - [X] Delete Order
@@ -51,10 +51,10 @@
 - [ ] Save File
 - [ ] Send Email
 - [ ] Send Sensitive Data To Untrusted Url
-- [ ] Set Unlimited Session Timeout
-- [ ] Store Token In Session
-- [ ] Swallow Exception
-- [ ] Throw Generic Exception
+- [X] Set Unlimited Session Timeout
+- [X] Store Token In Session
+- [X] Swallow Exception
+- [X] Throw Generic Exception
 - [x] Use Hardcoded Api Key
 - [x] Use Hardcoded Secret Key
 - [x] Use Hardcoded Windows Identity
@@ -73,8 +73,8 @@
 - [X] 8
 
 ## Scenario based Challenges
-- [ ] Question1
-- [ ] Question2
-- [ ] Question3
-- [ ] Question4
-- [ ] Question5
+- [X] Question1
+- [X] Question2
+- [X] Question3
+- [X] Question4
+- [X] Question5
