@@ -1,7 +1,7 @@
 public void AuthenticateWithHardcodedPassword()
 {
-    string password = "P@ssword!"; // Insecure: Hardcoded password
-    Console.WriteLine("Authenticating with hardcoded password.");
+    string password = Environment.GetEnvironmentVariable("ADMIN_PASSWORD"); // Secure: Use environment variable
+    Console.WriteLine("Authenticating with environment password.");
 
     // Simulate authentication
     if (password == "P@ssword!")

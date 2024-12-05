@@ -1,6 +1,6 @@
 public void GenerateJwtWithHardcodedSecret(string username)
 {
-    const string jwtSecret = "static_secret"; // Insecure: Hardcoded secret
+    const string jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
     Console.WriteLine("Generating JWT with hardcoded secret.");
 
     // Simulate JWT creation

@@ -1,11 +1,11 @@
 # CheckList
 
 ## Individual Challenges
-- [ ] Access Admin Panel
-- [ ] Add User Input To Cookie
-- [ ] Assign User Input To Inner Html
-- [ ] Authenticate User
-- [ ] Authenticate With Hardcoded Password
+- [X] Access Admin Panel
+- [X] Add User Input To Cookie
+- [X] Assign User Input To Inner Html
+- [X] Authenticate User
+- [X] Authenticate With Hardcoded Password
 - [ ] Connect With Hardcoded Connection String
 - [ ] Create Auth Cookie
 - [ ] Create Tcp Client
@@ -20,10 +20,10 @@
 - [ ] Encrypt With Hardcoded AES Key
 - [ ] Encrypt With Hardcoded Key
 - [ ] Execute Script
-- [ ] Generate Jwt With Hardcoded Secret
-- [ ] Get Product By Name
-- [ ] Get User By Username
-- [ ] Get User Data
+- [X] Generate Jwt With Hardcoded Secret
+- [X] Get Product By Name
+- [X] Get User By Username
+- [X] Get User Data
 - [ ] Hardcode Username In Session
 - [ ] Hash With MD5
 - [ ] HTML Injection.html
