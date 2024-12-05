@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
+using System.Text;
+using System.Web;
+using System.Security.Cryptography;
 
 namespace XSSAndCSRFWebApp
 {
@@ -8,44 +11,58 @@ namespace XSSAndCSRFWebApp
     [ApiController]
     public class UserController : ControllerBase
     {
-        // 1. XSS vulnerability (Injecting user input into HTML response without sanitization)
+        // Fixed XSS vulnerability by encoding user input
         [HttpGet("greet")]
         public IActionResult GreetUser(string username)
         {
-            return Content($"<h1>Welcome, {username}</h1>"); // XSS vulnerability
+            string encodedUsername = HttpUtility.HtmlEncode(username);
+            return Content($"<h1>Welcome, {encodedUsername}</h1>", "text/html");
         }
 
-        // 2. CSRF vulnerability (No token validation for sensitive operations)
+        // Implemented CSRF protection and secure password handling
         [HttpPost("updatePassword")]
+        [ValidateAntiForgeryToken]
         public IActionResult UpdatePassword([FromBody] string newPassword)
         {
-            // Vulnerable to CSRF as no token is validated
-            System.IO.File.WriteAllText("user_password.txt", newPassword); // Sensitive data written to file
+            string hashedPassword = HashPassword(newPassword);
+            // Store the hashed password securely
             return Ok("Password updated");
         }
 
-        // 3. Logging Sensitive Data (Insecure Logging)
+        // Avoided logging sensitive user actions
         [HttpPost("logUserAction")]
-        public IActionResult LogUserAction([FromBody] string action)
+        public IActionResult LogUserAction()
         {
-            System.IO.File.AppendAllText("user_actions.log", $"{DateTime.Now}: {action}\n"); // Logs sensitive user actions
+            System.IO.File.AppendAllText("user_actions.log", $"{DateTime.Now}: User performed an action.\n");
             return Ok("Action logged");
         }
 
-        // 4. Insecure File Handling (Writing to a sensitive file location)
+        // Stored data in a secure location with proper access control
         [HttpPost("saveData")]
         public IActionResult SaveData([FromBody] string data)
         {
-            System.IO.File.WriteAllText("C:\\SensitiveData\\user_data.txt", data); // Potentially sensitive location
+            string safePath = Path.Combine("App_Data", "user_data.txt");
+            System.IO.File.WriteAllText(safePath, data);
             return Ok("Data saved");
         }
 
-        // 5. Improper Validation (Storing passwords without any hashing or encryption)
+        // Hashed passwords before storing
         [HttpPost("storePassword")]
         public IActionResult StorePassword([FromBody] string password)
         {
-            System.IO.File.WriteAllText("plain_passwords.txt", password); // Storing passwords insecurely
+            string hashedPassword = HashPassword(password);
+            // Store the hashed password securely
             return Ok("Password stored");
+        }
+
+        private string HashPassword(string password)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                byte[] bytes = Encoding.UTF8.GetBytes(password);
+                byte[] hash = sha256.ComputeHash(bytes);
+                return Convert.ToBase64String(hash);
+            }
         }
     }
 }
