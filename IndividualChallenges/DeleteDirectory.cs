@@ -8,7 +8,7 @@ public void DeleteDirectory(string folderName)
     }
     else
     {
-        Console.WriteLine($"Deleted directory: C:\\Sensitive\\{folderName}");
+        Console.WriteLine($"Directory not Found: C:\\Sensitive\\{folderName}");
     }
     
 }
