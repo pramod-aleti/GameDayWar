@@ -4,16 +4,16 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 
-class VulnerableCLI
+class SecureCLI
 {
-    // Hardcoded Credentials (Vulnerability #1)
-    private const string connectionString = "Server=myServer;Database=myDB;User Id=admin;Password=admin123;";
-    private const string remoteServer = "http://remoteserver.com/api/upload";
-    private const string apiKey = "hardcoded-api-key";
+    // Securely retrieve the database connection string and API key
+    private static readonly string connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+    private static readonly string remoteServer = "https://remoteserver.com/api/upload"; // Use HTTPS
+    private static readonly string apiKey = Environment.GetEnvironmentVariable("API_KEY");
 
     static void Main(string[] args)
     {
-        Console.WriteLine("Welcome to the Insecure CLI!");
+        Console.WriteLine("Welcome to the Secure CLI!");
 
         // Prompt user for login credentials
         Console.Write("Enter Username: ");
@@ -22,16 +22,18 @@ class VulnerableCLI
         Console.Write("Enter Password: ");
         string password = Console.ReadLine();
 
-        // Log user input (Vulnerability #6)
-        File.AppendAllText("log.txt", $"Login attempt: {username}, Password: {password}\n");
+        // Avoid logging sensitive information
+        // File.AppendAllText("log.txt", $"Login attempt: {username}\n");
 
-        // SQL Injection (Vulnerability #2)
-        string query = $"SELECT * FROM Users WHERE Username = '{username}' AND Password = '{password}'";
+        // Use parameterized queries to prevent SQL Injection
+        string query = "SELECT * FROM Users WHERE Username = @Username AND Password = @Password";
 
         using (SqlConnection conn = new SqlConnection(connectionString))
         {
             conn.Open();
             SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@Username", username);
+            cmd.Parameters.AddWithValue("@Password", password);
 
             SqlDataReader reader = cmd.ExecuteReader();
             if (reader.HasRows)
@@ -52,30 +54,39 @@ class VulnerableCLI
         Console.Write("Enter filename to modify: ");
         string fileName = Console.ReadLine();
 
-        // Unvalidated Input and Insecure File Operations (Vulnerabilities #3, #5)
-        string filePath = "C:\\SecureData\\" + fileName;
-        File.AppendAllText(filePath, "Insecure data appended.\n");
+        // Validate and sanitize user input to prevent path traversal
+        string sanitizedFileName = Path.GetFileName(fileName);
+        string filePath = Path.Combine("C:\\SecureData\\", sanitizedFileName);
 
-        Console.WriteLine($"Data appended to {filePath}");
+        // Secure file operations
+        if (File.Exists(filePath))
+        {
+            File.AppendAllText(filePath, "Secure data appended.\n");
+            Console.WriteLine($"Data appended to {filePath}");
+        }
+        else
+        {
+            Console.WriteLine("File not found.");
+        }
     }
 
     static void UploadDataToServer(string username, string password)
     {
-        HttpClient client = new HttpClient();
-
-        // Unencrypted Communication (Vulnerability #4)
-        string payload = $"{{\"username\":\"{username}\",\"password\":\"{password}\"}}";
-        HttpContent content = new StringContent(payload, Encoding.UTF8, "application/json");
-
-        HttpResponseMessage response = client.PostAsync(remoteServer + "?apiKey=" + apiKey, content).Result;
-
-        if (response.IsSuccessStatusCode)
+        using (HttpClient client = new HttpClient())
         {
-            Console.WriteLine("Data uploaded successfully.");
-        }
-        else
-        {
-            Console.WriteLine("Failed to upload data.");
+            client.DefaultRequestHeaders.Add("ApiKey", apiKey);
+
+            var content = new StringContent($"{{\"username\":\"{username}\",\"password\":\"{password}\"}}", Encoding.UTF8, "application/json");
+            HttpResponseMessage response = client.PostAsync(remoteServer, content).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Data uploaded successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Failed to upload data.");
+            }
         }
     }
 }
