@@ -1,5 +1,13 @@
-public void CreateTcpClient(string host)
+public void CreateSecureTcpClient(string host)
 {
-    var tcpClient = new TcpClient(host, 80); // Insecure: No encryption and uses HTTP
-    Console.WriteLine("TCP client connected to: " + host);
+    using (var tcpClient = new TcpClient(host, 443)) // Secure: Uses HTTPS port
+    using (var sslStream = new SslStream(tcpClient.GetStream(), false))
+    {
+        // Authenticate the server
+        sslStream.AuthenticateAsClient(host);
+
+        Console.WriteLine("Secure TCP client connected to: " + host);
+
+        // Communication with the server goes here using sslStream
+    }
 }
