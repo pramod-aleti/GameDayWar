@@ -1,8 +1,9 @@
-public void ConnectWithHardcodedConnectionString()
+public void ConnectWithEnvironmentVariableConnectionString()
 {
-    var connectionString = "Server=myServer;User Id=admin;Password=admin123;"; // Insecure: Hardcoded credentials
-    Console.WriteLine("Connecting with hardcoded connection string.");
-
-    // Simulate database connection
-    Console.WriteLine("Connected to database using: " + connectionString);
+    var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        Console.WriteLine("Connection string is not set in environment variables.");
+        return;
+    }
 }
