@@ -11,11 +11,11 @@
 - [ ] Create Tcp Client
 - [ ] Create Web Request
 - [ ] Default Authentication
-- [ ] Delete Directory
+- [X] Delete Directory
 - [X] Delete File
-- [ ] Delete Order
-- [ ] Download File
-- [ ] Embed User Input In Script
+- [X] Delete Order
+- [X] Download File
+- [X] Embed User Input In Script
 - [ ] Encrypt With DES
 - [ ] Encrypt With Hardcoded AES Key
 - [ ] Encrypt With Hardcoded Key
@@ -42,7 +42,7 @@
 - [ ] Open Url With User Input
 - [ ] Perform Unverified Bank Transfer
 - [ ] Read File From Fixed Directory
-- [ ] Read File Lines
+- [X] Read File Lines
 - [ ] Read Log File
 - [ ] Redirect To Untrusted Site
 - [ ] Render Input To Response
