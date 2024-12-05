@@ -48,9 +48,9 @@
 - [ ] Render Input To Response
 - [ ] Run Command
 - [ ] Run Power Shell Script
-- [ ] Save File
-- [ ] Send Email
-- [ ] Send Sensitive Data To Untrusted Url
+- [X] Save File
+- [X] Send Email
+- [X] Send Sensitive Data To Untrusted Url
 - [X] Set Unlimited Session Timeout
 - [X] Store Token In Session
 - [X] Swallow Exception
